@@ -14,7 +14,9 @@ public class SaveACustomObject {
 
         saveObjects();
         loadObjects();
+
     }
+
     public static class Course implements Serializable {
         private String name;
         private int numberOfStudents;
@@ -23,21 +25,35 @@ public class SaveACustomObject {
             this.setName(name);
             this.setNumber(numberOfStudents);
         }
-        public void setName (String name) {this.name = name;}
-        public void setNumber (int numberOfStudents) {this.numberOfStudents = numberOfStudents;}
-        public String getName() {return name;}
-        public int getNumber() {return numberOfStudents;}
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setNumber(int numberOfStudents) {
+            this.numberOfStudents = numberOfStudents;
+        }
+
+        @Override
+        public String toString() {
+            return "Course " + this.name + " has " + this.numberOfStudents + " students.";
+        }
+
+        public int getNumber() {
+            return numberOfStudents;
+        }
+
     }
+
     private static void saveObjects() {
         try (ObjectOutputStream oos = new ObjectOutputStream(
                 new BufferedOutputStream(
                         new FileOutputStream("resources/SaveACustomObject/course.save")))) {
 
-            for(Course c : courses) {
+            for (Course c : courses) {
                 oos.writeObject(c);
             }
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             System.out.println(ioe.toString());
         }
     }
@@ -47,15 +63,12 @@ public class SaveACustomObject {
                 new BufferedInputStream(
                         new FileInputStream("resources/SaveACustomObject/course.save")))) {
             Object obj;
-
-            while ((obj = ois.readObject()) != null) {
+            while ((obj = ois.readObject().toString()) != null) {
                 System.out.println(obj);
             }
-        }
-        catch (EOFException eof) {
+        } catch (EOFException eof) {
             System.out.println("END OF FILE!");
-        }
-        catch (ClassNotFoundException | IOException cnfe) {
+        } catch (ClassNotFoundException | IOException cnfe) {
             System.out.println(cnfe.toString());
         }
     }
